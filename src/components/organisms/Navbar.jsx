@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 import {
@@ -10,6 +12,7 @@ import {
   MenuItems,
 } from "@headlessui/react";
 import { FaBars, FaBell, FaXmark, FaCartShopping } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -23,6 +26,7 @@ function classNames(...classes) {
 }
 
 export default function Navbaar() {
+  const cartItemsCount = useSelector((store) => store.cartSlice.cartItemsCount);
   return (
     <Disclosure as="nav" className="bg-gray-800 sticky top-0 z-100">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -79,8 +83,8 @@ export default function Navbaar() {
               <span className="absolute -inset-1.5" />
               <span className="sr-only">View cart</span>
               <div className="relative">
-                <span className="absolute -top-3 -right-1 text-amber-400 w-5 h-5 font-bold text-sm rounded-full flex justify-center items-center bg-amber-100">
-                  0
+                <span className="absolute -top-3 -right-1 text-amber-400 w-7 h-7 font-bold text-sm rounded-full flex justify-center items-center bg-amber-100">
+                  {cartItemsCount}
                 </span>
                 <FaCartShopping aria-hidden="true" className="size-6" />
               </div>

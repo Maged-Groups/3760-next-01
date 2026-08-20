@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, removeFromCart } from "@/lib/redux/slices/cartSlice";
 
 import Link from "next/link";
 import {
@@ -11,7 +13,7 @@ import {
   FiArrowUpRight,
 } from "react-icons/fi";
 
-const productCard = ({
+const ProductCard = ({
   rating,
   id,
   title,
@@ -25,8 +27,32 @@ const productCard = ({
   const [count, setCount] = useState(0);
   const stars = Math.ceil(rating);
 
-  const increase = () => setCount(count + 1);
-  const decrease = () => setCount(count - 1);
+  const dispatch = useDispatch();
+
+  const cart = useSelector((store) => store.cartSlice.cart);
+  console.log(cart);
+
+  // Checks if the current product was added to the cart
+
+  const found = cart.find((cartItme) => cartItme.id === id);
+  console.log(`The product with id: ${id}: `, found);
+
+  // ?. — Optional Chaining
+  // ?? — Nullish Coalescing
+
+  const quantity = found?.quantity ?? 0;
+
+  const increase = () =>
+    dispatch(
+      addToCart({
+        id,
+        title,
+        price,
+        thumbnail,
+      }),
+    );
+
+  const decrease = () => dispatch(removeFromCart(id));
 
   return (
     <article
@@ -122,7 +148,7 @@ const productCard = ({
           </div>
           {/* Add to Cart */}
 
-          {count === 0 ? (
+          {quantity === 0 ? (
             <button
               onClick={increase}
               className="px-3 py-1 rounded text-white bg-sky-700 hover:brightness-50"
@@ -137,7 +163,7 @@ const productCard = ({
               >
                 +
               </button>
-              <span className="text-sky-700">{count}</span>
+              <span className="text-sky-700">{quantity}</span>
               <button
                 onClick={decrease}
                 className="px-3 py-1 rounded text-white bg-red-700 hover:brightness-50"
@@ -152,4 +178,4 @@ const productCard = ({
   );
 };
 
-export default productCard;
+export default ProductCard;
